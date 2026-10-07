@@ -21,6 +21,8 @@ def cla_signed(email):
     return False
 
 def blamestat(ext='py'):
+    if not re.match(r'^[a-zA-Z0-9_\-./\\]+$', ext):
+        raise ValueError("Invalid ext parameter")
     r = {}
     ok = 0
     okl = []
