@@ -8,6 +8,7 @@ import itertools
 import logging
 import psycopg2
 import datetime
+import re
 
 from odoo import api, fields, models, Command
 from odoo import SUPERUSER_ID, _
@@ -118,6 +119,12 @@ class MergePartnerAutomatic(models.TransientModel):
         for table, column in relations:
             if 'base_partner_merge_' in table:  # ignore two tables
                 continue
+
+            # validate identifiers to prevent SQL injection
+            if not re.match(r'^[a-zA-Z0-9_]+$', str(table)):
+                raise ValueError("Invalid input")
+            if not re.match(r'^[a-zA-Z0-9_]+$', str(column)):
+                raise ValueError("Invalid input")
 
             # get list of columns of current table (exept the current fk column)
             query = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE '%s'" % (table)
