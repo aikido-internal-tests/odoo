@@ -3,6 +3,7 @@
 
 import logging
 import os
+import re
 from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
@@ -536,7 +537,15 @@ class IrModuleModule(models.Model):
         if not default_menu:
             return res
 
-        o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in langs if lang != 'en_US']
+        # Validate language codes to prevent SQL injection
+        validated_langs = []
+        for lang in langs:
+            if lang != 'en_US':
+                if not re.match(r'^[a-zA-Z0-9_]+$', str(lang)):
+                    raise ValueError("Invalid input")
+                validated_langs.append(lang)
+        
+        o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in validated_langs]
         o_menu_name = ['jsonb_build_object(' + ', '.join(items) + ')' for items in split_every(50, o_menu_name)]
         o_menu_name = ' || '.join(o_menu_name)
         self.env.cr.execute(f"""

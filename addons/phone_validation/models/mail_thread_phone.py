@@ -110,6 +110,8 @@ class PhoneMixin(models.AbstractModel):
                     f"(model.{phone_field} IS NOT NULL AND REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
                     for phone_field in phone_fields
                 )
+            if not re.match(r'^[a-zA-Z0-9_]+$', str(self._table)):
+                raise ValueError("Invalid input")
             query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
             term = re.sub(pattern, '', value)
             if operator not in ('=', '!='):  # for like operators
