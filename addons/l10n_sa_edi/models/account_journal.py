@@ -487,7 +487,7 @@ class AccountJournal(models.Model):
                 - If SIMPLIFIED invoice: Reporting
                 - If STANDARD invoice: Clearance
         """
-        invoice_tree = etree.fromstring(xml_content)
+        invoice_tree = etree.fromstring(xml_content, parser=etree.XMLParser(resolve_entities=False))
         invoice_hash_node = invoice_tree.xpath('//*[@Id="invoiceSignedData"]/*[local-name()="DigestValue"]')[0]
         invoice_hash = invoice_hash_node.text
         request_data = {

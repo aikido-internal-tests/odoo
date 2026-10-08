@@ -22,7 +22,7 @@ def canonicalize_node(node):
     Required for computing digests and signatures.
     Returns an UTF-8 encoded bytes string.
     """
-    node = etree.fromstring(node) if isinstance(node, str) else node
+    node = etree.fromstring(node, parser=etree.XMLParser(resolve_entities=False)) if isinstance(node, str) else node
     return etree.tostring(node, method='c14n', with_comments=False, exclusive=False)
 
 def cleanup_xml_signature(xml_sig):

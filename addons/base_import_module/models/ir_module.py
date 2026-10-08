@@ -468,7 +468,7 @@ def _is_studio_custom(path):
     filepaths = [fp for fp in filepaths if fp.lower().endswith('.xml')]
 
     for fp in filepaths:
-        root = lxml.etree.parse(fp).getroot()
+        root = lxml.etree.parse(fp, lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
         for record in root:
             # there might not be a context if it's a non-studio module
