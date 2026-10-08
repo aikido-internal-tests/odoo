@@ -35,7 +35,7 @@ class IrAttachment(models.Model):
         :returns:           A list with a dictionary.
         """
         try:
-            xml_tree = etree.fromstring(content)
+            xml_tree = etree.fromstring(content, parser=etree.XMLParser(resolve_entities=False))
         except Exception as e:
             _logger.exception("Error when converting the xml content to etree: %s", e)
             return []

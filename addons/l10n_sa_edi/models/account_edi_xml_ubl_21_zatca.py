@@ -61,7 +61,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             transform = etree.XSLT(invoice_xsl)
             return _canonicalize_xml(transform(content))
 
-        root = etree.fromstring(xml_content)
+        parser = etree.XMLParser(resolve_entities=False)
+        root = etree.fromstring(xml_content, parser)
         # Transform & canonicalize the XML content
         transformed_xml = _transform_and_canonicalize_xml(root)
         # Get the SHA256 hashed value of the XML content
