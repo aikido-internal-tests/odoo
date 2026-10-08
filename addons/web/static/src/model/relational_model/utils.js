@@ -167,7 +167,7 @@ export function patchActiveFields(activeField, patch) {
     if (patch.related) {
         const related = activeField.related;
         for (const fieldName in patch.related.activeFields) {
-            if (fieldName in related.activeFields) {
+            if (!["__proto__", "constructor", "prototype"].includes(fieldName) && fieldName in related.activeFields) {
                 patchActiveFields(
                     related.activeFields[fieldName],
                     patch.related.activeFields[fieldName]
@@ -232,12 +232,12 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                             fieldNode.views.default.fields
                         );
                         for (const fieldName in defaultArchInfo.activeFields) {
-                            if (fieldName in activeField.related.activeFields) {
+                            if (!["__proto__", "constructor", "prototype"].includes(fieldName) && fieldName in activeField.related.activeFields) {
                                 patchActiveFields(
                                     activeField.related.activeFields[fieldName],
                                     defaultArchInfo.activeFields[fieldName]
                                 );
-                            } else {
+                            } else if (!["__proto__", "constructor", "prototype"].includes(fieldName)) {
                                 activeField.related.activeFields[fieldName] = {
                                     ...defaultArchInfo.activeFields[fieldName],
                                 };
