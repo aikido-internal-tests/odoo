@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
-import xml.dom.minidom
+import xml.dom
 import zipfile
+
+from defusedxml import minidom
 
 from odoo import api, models
 from odoo.tools.lru import LRU
@@ -62,7 +64,7 @@ class IrAttachment(models.Model):
                 zf = zipfile.ZipFile(f)
                 zf_filelist = [x for x in zf.namelist() if x.startswith('ppt/slides/slide')]
                 for i in range(1, len(zf_filelist) + 1):
-                    content = xml.dom.minidom.parseString(zf.read('ppt/slides/slide%s.xml' % i))
+                    content = minidom.parseString(zf.read('ppt/slides/slide%s.xml' % i))
                     for val in ["a:t"]:
                         for element in content.getElementsByTagName(val):
                             buf += textToString(element) + "\n"
@@ -78,7 +80,7 @@ class IrAttachment(models.Model):
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
-                content = xml.dom.minidom.parseString(zf.read("xl/sharedStrings.xml"))
+                content = minidom.parseString(zf.read("xl/sharedStrings.xml"))
                 for val in ["t"]:
                     for element in content.getElementsByTagName(val):
                         buf += textToString(element) + "\n"
@@ -94,7 +96,7 @@ class IrAttachment(models.Model):
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
-                content = xml.dom.minidom.parseString(zf.read("content.xml"))
+                content = minidom.parseString(zf.read("content.xml"))
                 for val in ["text:p", "text:h", "text:list"]:
                     for element in content.getElementsByTagName(val):
                         buf += textToString(element) + "\n"
