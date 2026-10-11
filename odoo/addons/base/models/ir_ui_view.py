@@ -478,7 +478,7 @@ actual arch.
                     try:
                         if not values.get('arch') and not values.get('arch_base'):
                             raise ValidationError(_('Missing view architecture.'))
-                        values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                        values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base'), parser=etree.XMLParser(resolve_entities=False)).tag
                     except LxmlError:
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.

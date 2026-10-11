@@ -81,7 +81,7 @@ class AccountMove(models.Model):
             return root.xpath(expr, namespaces=edi_format._l10n_sa_get_namespaces())[0].text.strip()
 
         qr_code_str = ''
-        root = etree.fromstring(unsigned_xml)
+        root = etree.fromstring(unsigned_xml, parser=etree.XMLParser(resolve_entities=False))
         edi_format = self.env['account.edi.xml.ubl_21.zatca']
 
         # Indent XML content to avoid indentation mismatches

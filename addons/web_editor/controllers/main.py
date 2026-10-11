@@ -672,7 +672,7 @@ class Web_Editor(http.Controller):
         image = stream.read()
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
-        root = etree.fromstring(svg)
+        root = etree.fromstring(svg, parser=etree.XMLParser(resolve_entities=False))
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
