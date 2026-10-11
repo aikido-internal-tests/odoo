@@ -12,6 +12,7 @@ from hashlib import md5
 
 from PIL import Image
 from xml.etree import ElementTree as ET
+from defusedxml import ElementTree as DefusedET
 
 
 try:
@@ -697,7 +698,7 @@ class Escpos:
         try:
             stylestack      = StyleStack() 
             serializer      = XmlSerializer(self)
-            root            = ET.fromstring(xml.encode('utf-8'))
+            root            = DefusedET.fromstring(xml.encode('utf-8'))
 
             self._raw(stylestack.to_escpos())
 
