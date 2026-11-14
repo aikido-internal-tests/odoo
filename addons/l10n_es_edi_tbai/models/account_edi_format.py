@@ -537,7 +537,8 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_tbai_process_post_response_ar_gi(self, env, response):
         """Government response processing for Araba and Gipuzkoa."""
         try:
-            response_xml = etree.fromstring(response.content)
+            parser = etree.XMLParser(resolve_entities=False)
+            response_xml = etree.fromstring(response.content, parser)
         except etree.XMLSyntaxError as e:
             return False, e, None
 
@@ -652,7 +653,8 @@ class AccountEdiFormat(models.Model):
         response_xml = None
         if response_data:
             try:
-                response_xml = etree.fromstring(response_data)
+                parser = etree.XMLParser(resolve_entities=False)
+                response_xml = etree.fromstring(response_data, parser)
             except etree.XMLSyntaxError as e:
                 response_success = False
                 response_messages.append(str(e))
