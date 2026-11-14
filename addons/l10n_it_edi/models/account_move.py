@@ -1394,7 +1394,8 @@ class AccountMove(models.Model):
         if not (xml_content := notification.get('xml_content')):
             return {'sdi_state': sdi_state}
 
-        decrypted_update_content = etree.fromstring(xml_content)
+        parser = etree.XMLParser(resolve_entities=False)
+        decrypted_update_content = etree.fromstring(xml_content, parser)
         outcome = get_text(decrypted_update_content, './/Esito')
         date_arrival = get_datetime(decrypted_update_content, './/DataOraRicezione') or fields.Date.today()
         errors = [(
