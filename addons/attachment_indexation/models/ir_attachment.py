@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
-import xml.dom.minidom
+from defusedxml import minidom as xml_dom_minidom
+import xml.dom
 import zipfile
 
 from odoo import api, models
@@ -44,7 +45,7 @@ class IrAttachment(models.Model):
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
-                content = xml.dom.minidom.parseString(zf.read("word/document.xml"))
+                content = xml_dom_minidom.parseString(zf.read("word/document.xml"))
                 for val in ["w:p", "w:h", "text:list"]:
                     for element in content.getElementsByTagName(val):
                         buf += textToString(element) + "\n"
